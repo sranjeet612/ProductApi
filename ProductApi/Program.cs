@@ -17,8 +17,21 @@ builder.Services.AddApiVersioning(options =>
 {
     options.ReportApiVersions = true;
     options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
     // options.ApiVersionReader = new QueryStringApiVersionReader("api-version");  // this is used for query string api version 
     options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+});
+
+
+builder.Services.AddCors(options =>
+{
+
+    options.AddDefaultPolicy(coreBuilder =>
+    {
+        coreBuilder.AllowAnyHeader();
+        coreBuilder.AllowAnyMethod();
+        coreBuilder.AllowAnyOrigin();
+    });
 });
 
 var app = builder.Build();
@@ -31,6 +44,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 
